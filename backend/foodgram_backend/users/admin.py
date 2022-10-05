@@ -8,8 +8,7 @@ class UserAdmin(admin.ModelAdmin):
                     'email', 'password')
     list_editable = ('password',)
     list_filter = ('username', 'email',)
-    search_fields = ('username',)
-    search_fields = ('email',)
+    search_fields = ('username', 'email',)
     empty_value_display = '-пусто-'
 
 

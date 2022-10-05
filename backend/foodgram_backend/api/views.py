@@ -3,9 +3,6 @@ from django.http import FileResponse
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from djoser.views import UserViewSet
-from recipes.models import (IngredientInRecipe, Ingredients, IsFavorite,
-                            IsInShoppingCart, IsSubscribed, Recipes, Tags,
-                            User)
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.pagination import PageNumberPagination
@@ -13,12 +10,17 @@ from rest_framework.permissions import SAFE_METHODS, AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.status import HTTP_201_CREATED, HTTP_204_NO_CONTENT
 
+from recipes.models import (IngredientInRecipe, Ingredients, IsFavorite,
+                            IsInShoppingCart, IsSubscribed, Recipes, Tags,
+                            User)
+
 from .filters import IngredientsSearchFilter, RecipesFilter
 from .permissions import IsAuthorOrReadOnly
 from .serializers import (FollowSerializer, IngredientsSerializer,
                           IsFavoriteSerializer, IsInShoppingSerializer,
                           IsSubscribedSerializer, RecipeCreateSerializer,
                           RecipesSerializer, TagsSerializer)
+from .utils import create_list_shopping_cart
 
 
 class RecipesViewSet(viewsets.ModelViewSet):
@@ -84,13 +86,7 @@ class RecipesViewSet(viewsets.ModelViewSet):
             'ingredient__name',
             'ingredient__measurement_unit'
         ).annotate(amount=Sum('amount'))
-        shopping_cart = ['Список покупок:\n--------------']
-        for position, ingredient in enumerate(ingredients, start=1):
-            shopping_cart.append(
-                f'\n{position}. {ingredient["ingredient__name"]}:'
-                f' {ingredient["amount"]}'
-                f'({ingredient["ingredient__measurement_unit"]})'
-            )
+        shopping_cart = create_list_shopping_cart(ingredients)
         response = FileResponse(shopping_cart, as_attachment=True,
                                 content_type='text')
         response['Content-Disposition'] = (

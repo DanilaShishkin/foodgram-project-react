@@ -1,12 +1,12 @@
 import webcolors
-
 from django.shortcuts import get_object_or_404
 from djoser.serializers import UserCreateSerializer, UserSerializer
 from drf_extra_fields.fields import Base64ImageField
-from recipes.models import (IngredientInRecipe, Ingredients, IsFavorite,
-                            IsInShoppingCart, IsSubscribed, Recipes, Tags)
 from rest_framework import serializers
 from rest_framework.serializers import SerializerMethodField
+
+from recipes.models import (IngredientInRecipe, Ingredients, IsFavorite,
+                            IsInShoppingCart, IsSubscribed, Recipes, Tags)
 from users.models import User
 
 
@@ -66,8 +66,7 @@ class UserSerializer(UserCreateSerializer, UserSerializer):
         if not request or request.user.is_anonymous:
             return False
         author = get_object_or_404(User, username=obj.username)
-        user = get_object_or_404(User, username=request.user.username)
-        return IsSubscribed.objects.filter(user=user.id,
+        return IsSubscribed.objects.filter(user=request.user.id,
                                            author=author.id).exists()
 
 
@@ -148,17 +147,29 @@ class RecipeCreateSerializer(serializers.ModelSerializer):
                 'Не выбран ингредиент'
             )
         for value in data:
+            amount = value['amount']
             ingredient = get_object_or_404(Ingredients, id=value['id'])
             if ingredient in ingredients_list:
                 raise serializers.ValidationError(
-                    'Нельзя использовать одинаковые ингредиенты'
+                    'Поле ингредиенты должно быть уникальным'
+                )
+            if amount < 1:
+                raise serializers.ValidationError(
+                    'Количество ингредиента должно быть больше 1'
                 )
             ingredients_list.append(ingredient)
         return data
 
-    def create_ingredients(self, ingredientinrecipe, recipe):
+    def validate_cooking_time(self, data):
+        if data < 1:
+            raise serializers.ValidationError(
+                'Время приготовления должно быть больше 1 минуты'
+            )
+        return data
+
+    def create_ingredients(self, ingredient_in_recipe, recipe):
         list_obj = []
-        for ingredient in ingredientinrecipe:
+        for ingredient in ingredient_in_recipe:
             list_obj.append(
                 IngredientInRecipe(
                     recipe=recipe,
