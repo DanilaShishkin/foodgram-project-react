@@ -1,8 +1,7 @@
-
 from rest_framework import permissions
 
 
-class IsAuthorOrReadOnly(permissions .asePermission):
+class IsAuthorOrReadOnly(permissions.BasePermission):
     """Разрешения для не авторезованых пользователей."""
 
     def has_permission(self, request, view):
