@@ -19,7 +19,7 @@ jobs:
     - name: Test with flake8
       run: |
         python -m flake8
-  build_push_backend_to_docker_hub:
+  build_push_backend_to_DockerHub:
     name: Push Backend Docker image to Docker Hub
     runs-on: ubuntu-latest
     needs: tests
@@ -67,7 +67,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     needs: 
-      - build_push_backend_to_docker_hub
+      - build_push_backend_to_DockerHub
       - build_push_frontend_to_DockerHub
     if: github.ref == 'refs/heads/master'
     steps:
