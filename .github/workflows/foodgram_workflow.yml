@@ -41,7 +41,7 @@ jobs:
           context: ./backend/foodgram_backend
           file: ./backend/foodgram_backend/Dockerfile
 
-    build_push_frontend_to_DockerHub:
+  build_push_frontend_to_DockerHub:
     name: Push Frontend Docker image to Docker Hub
     runs-on: ubuntu-20.04
     needs: tests
