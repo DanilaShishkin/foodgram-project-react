@@ -38,8 +38,8 @@ jobs:
         with:
           push: true
           tags: danilashishkin/foodgram_backend:latest
-          context: ./foodgram_backend
-          file: ./foodgram_backend/Dockerfile
+          context: ./backend/foodgram_backend
+          file: ./backend/foodgram_backend/Dockerfile
   deploy:
     runs-on: ubuntu-latest
     needs: build_and_push_to_docker_hub
