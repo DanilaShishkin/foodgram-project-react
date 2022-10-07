@@ -66,7 +66,7 @@ class Recipes(models.Model):
     cooking_time = models.PositiveIntegerField(
         default=1, validators=[MinValueValidator(1, message='минимум 1')],
         verbose_name='Время готовности'
-        )
+    )
     date = models.DateTimeField(
         verbose_name='Дата публикации',
         auto_now_add=True
@@ -100,8 +100,8 @@ class IngredientInRecipe(models.Model):
             models.UniqueConstraint(
                 fields=['recipe', 'ingredient'],
                 name='unique_ingredient'
-                )
-            ]
+            )
+        ]
 
     def __str__(self):
         return (

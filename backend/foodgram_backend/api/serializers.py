@@ -57,7 +57,7 @@ class UserSerializer(UserCreateSerializer, UserSerializer):
     is_subscribed = SerializerMethodField(read_only=True)
 
     class Meta:
-        fields = ('email', 'id', 'username',  'first_name',
+        fields = ('email', 'id', 'username', 'first_name',
                   'last_name', 'password', 'is_subscribed',)
         model = User
 
@@ -84,7 +84,7 @@ class RecipesSerializer(serializers.ModelSerializer):
     author = AuthorSerializer(read_only=True)
     ingredients = IngredientRecipeSerializer(
         source='recipe', required=True, many=True
-        )
+    )
     image = Base64ImageField(read_only=True, required=False, allow_null=True)
     is_in_shopping_cart = SerializerMethodField()
     is_favorited = SerializerMethodField()
