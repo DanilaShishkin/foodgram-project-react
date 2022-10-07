@@ -81,7 +81,7 @@ jobs:
           script: |
             sudo docker-compose stop
             sudo docker-compose rm frontend
-            sudo docker-compose rm backend
+            sudo docker image rm danilashishkin/foodgram_backend
             sudo docker-compose pull danilashishkin/foodgram_backend:latest
             sudo docker-compose pull danilashishkin/foodgram_frontend:latest
             touch .env
