@@ -14,7 +14,7 @@ services:
     image: danilashishkin/foodgram_backend:latest
     volumes:
       - ../static/:/app/static/
-      - ../media/:/app/media/food/
+      - ../media/:/app/media/
     depends_on:
       - db
     env_file:
@@ -33,11 +33,11 @@ services:
     ports:
       - "80:80"
     volumes:
+      - ../static/:/var/html/static/
+      - ../media/:/var/html/media/
       - ./nginx.conf:/etc/nginx/conf.d/default.conf
       - ../frontend/build:/usr/share/nginx/html/
       - ../docs/:/usr/share/nginx/html/api/docs/
-      - ../static/:/var/html/static/
-      - ../media/:/var/html/media/food/
     depends_on:
       - backend
       - frontend
