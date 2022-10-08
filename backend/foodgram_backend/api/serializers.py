@@ -70,18 +70,29 @@ class UserSerializer(UserCreateSerializer, UserSerializer):
                                            author=author.id).exists()
 
 
-class AuthorSerializer(serializers.ModelSerializer):
-    """Сериализатор для автора."""
-    class Meta:
-        model = User
-        fields = ('email', 'id', 'username',
-                  'first_name', 'last_name',)
+# class AuthorSerializer(serializers.ModelSerializer):
+#     """Сериализатор для автора."""
+#     is_subscribed = SerializerMethodField(read_only=True)
+
+#     class Meta:
+#         model = User
+#         fields = ('email', 'id', 'username',
+#                   'first_name', 'last_name',
+#                   'is_subscribed',)
+
+#     def get_is_subscribed(self, obj):
+#         request = self.context.get('request')
+#         if not request or request.user.is_anonymous:
+#             return False
+#         author = get_object_or_404(User, username=obj.username)
+#         return IsSubscribed.objects.filter(user=request.user.id,
+#                                            author=author.id).exists()
 
 
 class RecipesSerializer(serializers.ModelSerializer):
     """Сериализатор для отображения рецептов."""
     tags = TagsSerializer(many=True, read_only=True)
-    author = AuthorSerializer(read_only=True)
+    author = UserSerializer(read_only=True)
     ingredients = IngredientRecipeSerializer(
         source='recipe', required=True, many=True
     )
